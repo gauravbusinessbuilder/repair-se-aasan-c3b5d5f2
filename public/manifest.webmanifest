@@ -1,0 +1,14 @@
+{
+  "name": "RepairFlow – Mobile Shop Manager",
+  "short_name": "RepairFlow",
+  "description": "Manage mobile repair jobs, send WhatsApp updates, generate invoices.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b1d8a",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
