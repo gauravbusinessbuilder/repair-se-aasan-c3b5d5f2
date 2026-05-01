@@ -11,6 +11,7 @@ export const Route = createFileRoute("/templates")({
 function Templates() {
   const { templates, upsertTemplate, resetTemplates } = useStore();
   const [editing, setEditing] = useState<string | null>(null);
+  const [draft, setDraft] = useState("");
 
   return (
     <AppShell title="Message Templates" back="/">
@@ -33,7 +34,10 @@ function Templates() {
                   <div className="text-[11px] uppercase tracking-wide text-muted-foreground">{t.key}</div>
                 </div>
                 {!isEdit && (
-                  <button onClick={() => setEditing(t.id)} className="text-primary font-semibold text-sm px-3 py-1.5 rounded-lg bg-primary/10">
+                  <button
+                    onClick={() => { setEditing(t.id); setDraft(t.body); }}
+                    className="text-primary font-semibold text-sm px-3 py-1.5 rounded-lg bg-primary/10"
+                  >
                     Edit
                   </button>
                 )}
@@ -41,14 +45,14 @@ function Templates() {
               {isEdit ? (
                 <>
                   <textarea
-                    defaultValue={t.body}
+                    value={draft}
+                    onChange={(e) => setDraft(e.target.value)}
                     rows={4}
                     className="w-full rounded-xl border-2 border-input focus:border-primary bg-background p-3 text-sm outline-none"
-                    onChange={(e) => (t.body = e.target.value)}
                   />
                   <div className="flex gap-2 mt-2">
                     <button
-                      onClick={() => { upsertTemplate({ ...t }); setEditing(null); }}
+                      onClick={() => { upsertTemplate({ ...t, body: draft }); setEditing(null); }}
                       className="flex-1 h-11 rounded-xl bg-primary text-primary-foreground font-bold flex items-center justify-center gap-2"
                     >
                       <Save className="h-4 w-4" /> Save
