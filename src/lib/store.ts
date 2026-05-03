@@ -12,11 +12,29 @@ const DEFAULT_TEMPLATES: Template[] = [
   { id: "t7", key: "followup",    label: "Pickup Reminder",    body: "{{name}} ji, aapka {{device}} hamare paas ready hai. Kab aa rahe hain collect karne? - {{shop}}" },
 ];
 
+export interface AuthState {
+  userId: string;     // chosen ID
+  password: string;   // local-only (demo)
+  loggedIn: boolean;
+}
+
+export interface SubscriptionState {
+  pro: boolean;
+  since?: number;
+  upiTxnRef?: string;
+}
+
+export const FREE_LIMIT = 20;
+export const PRO_PRICE = 149;
+export const UPI_ID = "repairflow@upi"; // shop owner can change in settings later
+
 interface State {
   shop: ShopInfo;
   jobs: Job[];
   templates: Template[];
   counter: number;
+  auth: AuthState;
+  subscription: SubscriptionState;
 
   setShop: (s: Partial<ShopInfo>) => void;
   addJob: (j: Omit<Job, "id" | "status" | "createdAt" | "updatedAt" | "paid">) => Job;
@@ -25,6 +43,10 @@ interface State {
   deleteJob: (id: string) => void;
   upsertTemplate: (t: Template) => void;
   resetTemplates: () => void;
+
+  registerOrLogin: (userId: string, password: string) => { ok: boolean; error?: string };
+  logout: () => void;
+  activatePro: (txnRef: string) => void;
 }
 
 export const useStore = create<State>()(
@@ -34,6 +56,8 @@ export const useStore = create<State>()(
       jobs: [],
       templates: DEFAULT_TEMPLATES,
       counter: 1,
+      auth: { userId: "", password: "", loggedIn: false },
+      subscription: { pro: false },
 
       setShop: (s) => set((st) => ({ shop: { ...st.shop, ...s } })),
 
@@ -76,6 +100,28 @@ export const useStore = create<State>()(
         }),
 
       resetTemplates: () => set({ templates: DEFAULT_TEMPLATES }),
+
+      registerOrLogin: (userId, password) => {
+        const id = userId.trim();
+        if (id.length < 3) return { ok: false, error: "ID kam se kam 3 letters ka ho" };
+        if (password.length < 4) return { ok: false, error: "Password kam se kam 4 letters ka ho" };
+        const existing = get().auth;
+        // First-time: register. Subsequent: must match.
+        if (existing.userId) {
+          if (existing.userId !== id || existing.password !== password) {
+            return { ok: false, error: "ID ya password galat hai" };
+          }
+          set({ auth: { ...existing, loggedIn: true } });
+          return { ok: true };
+        }
+        set({ auth: { userId: id, password, loggedIn: true } });
+        return { ok: true };
+      },
+
+      logout: () => set((st) => ({ auth: { ...st.auth, loggedIn: false } })),
+
+      activatePro: (txnRef) =>
+        set({ subscription: { pro: true, since: Date.now(), upiTxnRef: txnRef.trim() } }),
     }),
     { name: "repairflow-v1" }
   )
