@@ -79,12 +79,12 @@ function Index() {
         </Link>
 
         <div className="grid grid-cols-2 gap-3">
-          <Link to="/templates" className="bg-card border border-border rounded-2xl p-4 active:scale-[0.99] transition">
+          <Link to="/bulk" className="bg-card border border-border rounded-2xl p-4 active:scale-[0.99] transition">
             <div className="h-10 w-10 rounded-xl bg-whatsapp/15 text-whatsapp flex items-center justify-center mb-2">
               <MessageSquare className="h-5 w-5" />
             </div>
-            <div className="font-bold leading-tight">Send Message</div>
-            <div className="text-xs text-muted-foreground mt-0.5">Template chunein</div>
+            <div className="font-bold leading-tight">Bulk Send</div>
+            <div className="text-xs text-muted-foreground mt-0.5">Multiple customers</div>
           </Link>
           <Link to="/followups" className="bg-card border border-border rounded-2xl p-4 active:scale-[0.99] transition">
             <div className="h-10 w-10 rounded-xl bg-status-waiting/15 text-status-waiting flex items-center justify-center mb-2">

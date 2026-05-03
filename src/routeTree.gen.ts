@@ -9,14 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UpgradeRouteImport } from './routes/upgrade'
 import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as FollowupsRouteImport } from './routes/followups'
+import { Route as BulkRouteImport } from './routes/bulk'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AddRouteImport } from './routes/add'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as JobIdRouteImport } from './routes/job.$id'
 
+const UpgradeRoute = UpgradeRouteImport.update({
+  id: '/upgrade',
+  path: '/upgrade',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TemplatesRoute = TemplatesRouteImport.update({
   id: '/templates',
   path: '/templates',
@@ -27,9 +35,19 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FollowupsRoute = FollowupsRouteImport.update({
   id: '/followups',
   path: '/followups',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BulkRoute = BulkRouteImport.update({
+  id: '/bulk',
+  path: '/bulk',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AnalyticsRoute = AnalyticsRouteImport.update({
@@ -57,18 +75,24 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/add': typeof AddRoute
   '/analytics': typeof AnalyticsRoute
+  '/bulk': typeof BulkRoute
   '/followups': typeof FollowupsRoute
+  '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
   '/templates': typeof TemplatesRoute
+  '/upgrade': typeof UpgradeRoute
   '/job/$id': typeof JobIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/add': typeof AddRoute
   '/analytics': typeof AnalyticsRoute
+  '/bulk': typeof BulkRoute
   '/followups': typeof FollowupsRoute
+  '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
   '/templates': typeof TemplatesRoute
+  '/upgrade': typeof UpgradeRoute
   '/job/$id': typeof JobIdRoute
 }
 export interface FileRoutesById {
@@ -76,9 +100,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/add': typeof AddRoute
   '/analytics': typeof AnalyticsRoute
+  '/bulk': typeof BulkRoute
   '/followups': typeof FollowupsRoute
+  '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
   '/templates': typeof TemplatesRoute
+  '/upgrade': typeof UpgradeRoute
   '/job/$id': typeof JobIdRoute
 }
 export interface FileRouteTypes {
@@ -87,27 +114,36 @@ export interface FileRouteTypes {
     | '/'
     | '/add'
     | '/analytics'
+    | '/bulk'
     | '/followups'
+    | '/login'
     | '/settings'
     | '/templates'
+    | '/upgrade'
     | '/job/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/add'
     | '/analytics'
+    | '/bulk'
     | '/followups'
+    | '/login'
     | '/settings'
     | '/templates'
+    | '/upgrade'
     | '/job/$id'
   id:
     | '__root__'
     | '/'
     | '/add'
     | '/analytics'
+    | '/bulk'
     | '/followups'
+    | '/login'
     | '/settings'
     | '/templates'
+    | '/upgrade'
     | '/job/$id'
   fileRoutesById: FileRoutesById
 }
@@ -115,14 +151,24 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AddRoute: typeof AddRoute
   AnalyticsRoute: typeof AnalyticsRoute
+  BulkRoute: typeof BulkRoute
   FollowupsRoute: typeof FollowupsRoute
+  LoginRoute: typeof LoginRoute
   SettingsRoute: typeof SettingsRoute
   TemplatesRoute: typeof TemplatesRoute
+  UpgradeRoute: typeof UpgradeRoute
   JobIdRoute: typeof JobIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/upgrade': {
+      id: '/upgrade'
+      path: '/upgrade'
+      fullPath: '/upgrade'
+      preLoaderRoute: typeof UpgradeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/templates': {
       id: '/templates'
       path: '/templates'
@@ -137,11 +183,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/followups': {
       id: '/followups'
       path: '/followups'
       fullPath: '/followups'
       preLoaderRoute: typeof FollowupsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bulk': {
+      id: '/bulk'
+      path: '/bulk'
+      fullPath: '/bulk'
+      preLoaderRoute: typeof BulkRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/analytics': {
@@ -179,9 +239,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AddRoute: AddRoute,
   AnalyticsRoute: AnalyticsRoute,
+  BulkRoute: BulkRoute,
   FollowupsRoute: FollowupsRoute,
+  LoginRoute: LoginRoute,
   SettingsRoute: SettingsRoute,
   TemplatesRoute: TemplatesRoute,
+  UpgradeRoute: UpgradeRoute,
   JobIdRoute: JobIdRoute,
 }
 export const routeTree = rootRouteImport

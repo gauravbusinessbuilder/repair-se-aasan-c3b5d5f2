@@ -1,8 +1,8 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
-import { useStore, fillTemplate, waLink } from "@/lib/store";
+import { useStore, fillTemplate, waLink, FREE_LIMIT, PRO_PRICE } from "@/lib/store";
 import { useState } from "react";
-import { Send } from "lucide-react";
+import { Crown, Send } from "lucide-react";
 
 export const Route = createFileRoute("/add")({
   component: AddJob,
@@ -10,7 +10,10 @@ export const Route = createFileRoute("/add")({
 
 function AddJob() {
   const navigate = useNavigate();
-  const { addJob, templates, shop } = useStore();
+  const { addJob, templates, shop, jobs, subscription } = useStore();
+  const isPro = subscription.pro;
+  const remaining = Math.max(0, FREE_LIMIT - jobs.length);
+  const blocked = !isPro && jobs.length >= FREE_LIMIT;
   const [form, setForm] = useState({
     customerName: "",
     phone: "",
@@ -23,6 +26,7 @@ function AddJob() {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (blocked) { navigate({ to: "/upgrade" }); return; }
     if (!form.customerName.trim() || form.phone.length < 10 || !form.device.trim()) return;
 
     const job = addJob({
@@ -51,7 +55,29 @@ function AddJob() {
 
   return (
     <AppShell title="Naya Repair" back="/">
+      {blocked ? (
+        <div className="mt-4 rounded-3xl bg-gradient-to-br from-primary/15 to-primary/5 border border-primary/30 p-5 text-center">
+          <div className="mx-auto h-16 w-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center mb-3">
+            <Crown className="h-8 w-8" />
+          </div>
+          <h2 className="font-extrabold text-xl">Free Limit Khatam</h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            Aap ne {FREE_LIMIT} customers add kar liye hain. Unlimited customers ke liye Pro lein.
+          </p>
+          <Link
+            to="/upgrade"
+            className="mt-4 inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-primary text-primary-foreground font-bold shadow-lg shadow-primary/30"
+          >
+            <Crown className="h-4 w-4" /> Get Pro · ₹{PRO_PRICE}
+          </Link>
+        </div>
+      ) : (
       <form onSubmit={submit} className="space-y-4 mt-2">
+        {!isPro && (
+          <div className="rounded-2xl bg-accent/50 border border-border p-2.5 text-xs text-center font-medium">
+            {remaining} free customers bache hain · <Link to="/upgrade" className="text-primary font-bold underline">Upgrade</Link>
+          </div>
+        )}
         <Field label="Customer Name *" placeholder="Ramesh Kumar" value={form.customerName} onChange={set("customerName")} />
         <Field
           label="Phone Number *"
@@ -95,6 +121,7 @@ function AddJob() {
           Save & Send WhatsApp
         </button>
       </form>
+      )}
     </AppShell>
   );
 }
