@@ -73,5 +73,26 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  return <Outlet />;
+  return <AuthGate><Outlet /></AuthGate>;
+}
+
+function AuthGate({ children }: { children: React.ReactNode }) {
+  const { useLocation, useNavigate } = require("@tanstack/react-router") as typeof import("@tanstack/react-router");
+  const location = useLocation();
+  const navigate = useNavigate();
+  const loggedIn = useAuthLoggedIn();
+  const onLogin = location.pathname === "/login";
+
+  if (typeof window !== "undefined" && !loggedIn && !onLogin) {
+    // redirect once mounted
+    queueMicrotask(() => navigate({ to: "/login" }));
+    return null;
+  }
+  return <>{children}</>;
+}
+
+function useAuthLoggedIn() {
+  // Lazy import to avoid SSR window access
+  const { useStore } = require("@/lib/store") as typeof import("@/lib/store");
+  return useStore((s) => s.auth.loggedIn);
 }
