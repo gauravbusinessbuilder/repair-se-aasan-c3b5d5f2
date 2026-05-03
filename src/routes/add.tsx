@@ -1,8 +1,8 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
-import { useStore, fillTemplate, waLink } from "@/lib/store";
+import { useStore, fillTemplate, waLink, FREE_LIMIT, PRO_PRICE } from "@/lib/store";
 import { useState } from "react";
-import { Send } from "lucide-react";
+import { Crown, Send } from "lucide-react";
 
 export const Route = createFileRoute("/add")({
   component: AddJob,
@@ -10,7 +10,10 @@ export const Route = createFileRoute("/add")({
 
 function AddJob() {
   const navigate = useNavigate();
-  const { addJob, templates, shop } = useStore();
+  const { addJob, templates, shop, jobs, subscription } = useStore();
+  const isPro = subscription.pro;
+  const remaining = Math.max(0, FREE_LIMIT - jobs.length);
+  const blocked = !isPro && jobs.length >= FREE_LIMIT;
   const [form, setForm] = useState({
     customerName: "",
     phone: "",
