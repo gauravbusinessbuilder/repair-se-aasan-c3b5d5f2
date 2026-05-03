@@ -1,4 +1,6 @@
-import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { Outlet, Link, createRootRoute, HeadContent, Scripts, useLocation, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { useStore } from "@/lib/store";
 
 import appCss from "../styles.css?url";
 
@@ -77,22 +79,15 @@ function RootComponent() {
 }
 
 function AuthGate({ children }: { children: React.ReactNode }) {
-  const { useLocation, useNavigate } = require("@tanstack/react-router") as typeof import("@tanstack/react-router");
   const location = useLocation();
   const navigate = useNavigate();
-  const loggedIn = useAuthLoggedIn();
+  const loggedIn = useStore((s) => s.auth.loggedIn);
   const onLogin = location.pathname === "/login";
 
-  if (typeof window !== "undefined" && !loggedIn && !onLogin) {
-    // redirect once mounted
-    queueMicrotask(() => navigate({ to: "/login" }));
-    return null;
-  }
-  return <>{children}</>;
-}
+  useEffect(() => {
+    if (!loggedIn && !onLogin) navigate({ to: "/login" });
+  }, [loggedIn, onLogin, navigate]);
 
-function useAuthLoggedIn() {
-  // Lazy import to avoid SSR window access
-  const { useStore } = require("@/lib/store") as typeof import("@/lib/store");
-  return useStore((s) => s.auth.loggedIn);
+  if (!loggedIn && !onLogin) return null;
+  return <>{children}</>;
 }
