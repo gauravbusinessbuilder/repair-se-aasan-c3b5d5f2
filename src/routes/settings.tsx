@@ -1,15 +1,16 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
-import { useStore } from "@/lib/store";
+import { useStore, FREE_LIMIT, PRO_PRICE } from "@/lib/store";
 import { useState } from "react";
-import { Check } from "lucide-react";
+import { Check, Crown, LogOut } from "lucide-react";
 
 export const Route = createFileRoute("/settings")({
   component: Settings,
 });
 
 function Settings() {
-  const { shop, setShop } = useStore();
+  const navigate = useNavigate();
+  const { shop, setShop, subscription, jobs, auth, logout } = useStore();
   const [form, setForm] = useState(shop);
   const [saved, setSaved] = useState(false);
 
@@ -22,6 +23,38 @@ function Settings() {
 
   return (
     <AppShell title="Shop Setup" back="/">
+      <div className={`rounded-2xl p-4 mb-4 border ${subscription.pro ? "bg-status-ready/10 border-status-ready/30" : "bg-primary/5 border-primary/20"}`}>
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide">
+              <Crown className={`h-4 w-4 ${subscription.pro ? "text-status-ready" : "text-primary"}`} />
+              {subscription.pro ? "Pro Plan" : "Free Plan"}
+            </div>
+            <div className="text-sm mt-0.5 text-muted-foreground">
+              {subscription.pro ? "Unlimited customers" : `${jobs.length} / ${FREE_LIMIT} customers used`}
+            </div>
+          </div>
+          {!subscription.pro && (
+            <Link to="/upgrade" className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-bold whitespace-nowrap">
+              Get Pro · ₹{PRO_PRICE}
+            </Link>
+          )}
+        </div>
+      </div>
+
+      <div className="rounded-2xl p-4 mb-4 bg-card border border-border flex items-center justify-between">
+        <div>
+          <div className="text-xs text-muted-foreground font-semibold uppercase tracking-wide">Logged in as</div>
+          <div className="font-bold">{auth.userId || "—"}</div>
+        </div>
+        <button
+          onClick={() => { logout(); navigate({ to: "/login" }); }}
+          className="px-3 py-2 rounded-xl bg-destructive/10 text-destructive font-bold text-sm flex items-center gap-1.5"
+        >
+          <LogOut className="h-4 w-4" /> Logout
+        </button>
+      </div>
+
       <form onSubmit={save} className="space-y-4 mt-2">
         <Field label="Shop Name *" value={form.shopName} onChange={(v) => setForm({ ...form, shopName: v })} placeholder="Sharma Mobile Repair" />
         <Field label="Owner Name" value={form.ownerName} onChange={(v) => setForm({ ...form, ownerName: v })} placeholder="Aapka naam" />
