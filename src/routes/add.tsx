@@ -119,11 +119,6 @@ function AddJob() {
           className="w-full h-14 rounded-2xl bg-primary text-primary-foreground font-bold text-lg active:scale-[0.99] shadow-lg shadow-primary/30"
         >
           Save & Send WhatsApp
-        <button
-          type="submit"
-          className="w-full h-14 rounded-2xl bg-primary text-primary-foreground font-bold text-lg active:scale-[0.99] shadow-lg shadow-primary/30"
-        >
-          Save & Send WhatsApp
         </button>
       </form>
       )}
