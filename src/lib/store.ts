@@ -26,7 +26,7 @@ export interface SubscriptionState {
 
 export const FREE_LIMIT = 20;
 export const PRO_PRICE = 149;
-export const UPI_ID = "9929299165@upi"; // payment receiver mobile number
+export const UPI_ID = "9929299165@kotakbank"; // payment receiver UPI ID
 
 interface State {
   shop: ShopInfo;
