@@ -15,8 +15,19 @@ const DEFAULT_TEMPLATES: Template[] = [
 export interface AuthState {
   userId: string;     // chosen ID
   password: string;   // local-only (demo)
+  email?: string;     // recovery email
+  securityQuestion?: string;
+  securityAnswer?: string; // stored lowercased+trimmed
   loggedIn: boolean;
 }
+
+export const SECURITY_QUESTIONS = [
+  "Aapki pehli school ka naam?",
+  "Aapki maa ka pehla naam?",
+  "Aapke pehle pet ka naam?",
+  "Aapka favourite shehar?",
+  "Aapki birth city?",
+];
 
 export interface SubscriptionState {
   pro: boolean;
