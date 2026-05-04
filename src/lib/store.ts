@@ -55,9 +55,11 @@ interface State {
   upsertTemplate: (t: Template) => void;
   resetTemplates: () => void;
 
-  registerOrLogin: (userId: string, password: string) => { ok: boolean; error?: string };
+  registerOrLogin: (userId: string, password: string, recovery?: { email: string; securityQuestion: string; securityAnswer: string }) => { ok: boolean; error?: string };
   logout: () => void;
   activatePro: (txnRef: string) => void;
+  getRecoveryQuestion: (email: string) => { ok: boolean; question?: string; userId?: string; error?: string };
+  resetCredentials: (email: string, answer: string, newUserId: string, newPassword: string) => { ok: boolean; error?: string };
 }
 
 export const useStore = create<State>()(
