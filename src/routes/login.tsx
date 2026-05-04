@@ -1,7 +1,7 @@
-import { createFileRoute, useNavigate, redirect } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, redirect, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { useStore } from "@/lib/store";
-import { Lock, User, LogIn } from "lucide-react";
+import { useStore, SECURITY_QUESTIONS } from "@/lib/store";
+import { Lock, User, LogIn, Mail, HelpCircle } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
   beforeLoad: () => {
@@ -26,11 +26,16 @@ function Login() {
   const isFirstTime = !auth.userId;
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [secQ, setSecQ] = useState(SECURITY_QUESTIONS[0]);
+  const [secA, setSecA] = useState("");
   const [err, setErr] = useState("");
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    const res = registerOrLogin(userId, password);
+    const res = isFirstTime
+      ? registerOrLogin(userId, password, { email, securityQuestion: secQ, securityAnswer: secA })
+      : registerOrLogin(userId, password);
     if (!res.ok) { setErr(res.error || "Error"); return; }
     navigate({ to: "/" });
   };
@@ -54,6 +59,26 @@ function Login() {
           <Field icon={User} label="Your ID" value={userId} onChange={setUserId} placeholder="ramesh123" />
           <Field icon={Lock} label="Password" value={password} onChange={setPassword} placeholder="••••••" type="password" />
 
+          {isFirstTime && (
+            <>
+              <Field icon={Mail} label="Recovery Email" value={email} onChange={setEmail} placeholder="aap@email.com" type="email" />
+              <label className="block">
+                <span className="text-sm font-semibold mb-1.5 block">Security Question</span>
+                <div className="flex items-center rounded-2xl border-2 border-input focus-within:border-primary bg-background overflow-hidden">
+                  <span className="pl-3 text-muted-foreground"><HelpCircle className="h-4 w-4" /></span>
+                  <select
+                    value={secQ}
+                    onChange={(e) => setSecQ(e.target.value)}
+                    className="flex-1 px-3 py-3 bg-transparent outline-none text-base"
+                  >
+                    {SECURITY_QUESTIONS.map((q) => <option key={q} value={q}>{q}</option>)}
+                  </select>
+                </div>
+              </label>
+              <Field icon={HelpCircle} label="Answer" value={secA} onChange={setSecA} placeholder="Aapka jawab" />
+            </>
+          )}
+
           {err && <div className="text-sm font-semibold text-destructive">{err}</div>}
 
           <button
@@ -63,6 +88,14 @@ function Login() {
             <LogIn className="h-5 w-5" />
             {isFirstTime ? "Sign Up & Continue" : "Login"}
           </button>
+
+          {!isFirstTime && (
+            <div className="text-center">
+              <Link to="/reset" className="text-sm font-semibold text-primary">
+                ID/Password bhul gaye?
+              </Link>
+            </div>
+          )}
 
           <p className="text-[11px] text-center text-muted-foreground">
             Aapka ID/password sirf is phone me save hai (offline)
