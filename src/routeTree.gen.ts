@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as UpgradeRouteImport } from './routes/upgrade'
 import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ResetRouteImport } from './routes/reset'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FollowupsRouteImport } from './routes/followups'
 import { Route as BulkRouteImport } from './routes/bulk'
@@ -33,6 +34,11 @@ const TemplatesRoute = TemplatesRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetRoute = ResetRouteImport.update({
+  id: '/reset',
+  path: '/reset',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -78,6 +84,7 @@ export interface FileRoutesByFullPath {
   '/bulk': typeof BulkRoute
   '/followups': typeof FollowupsRoute
   '/login': typeof LoginRoute
+  '/reset': typeof ResetRoute
   '/settings': typeof SettingsRoute
   '/templates': typeof TemplatesRoute
   '/upgrade': typeof UpgradeRoute
@@ -90,6 +97,7 @@ export interface FileRoutesByTo {
   '/bulk': typeof BulkRoute
   '/followups': typeof FollowupsRoute
   '/login': typeof LoginRoute
+  '/reset': typeof ResetRoute
   '/settings': typeof SettingsRoute
   '/templates': typeof TemplatesRoute
   '/upgrade': typeof UpgradeRoute
@@ -103,6 +111,7 @@ export interface FileRoutesById {
   '/bulk': typeof BulkRoute
   '/followups': typeof FollowupsRoute
   '/login': typeof LoginRoute
+  '/reset': typeof ResetRoute
   '/settings': typeof SettingsRoute
   '/templates': typeof TemplatesRoute
   '/upgrade': typeof UpgradeRoute
@@ -117,6 +126,7 @@ export interface FileRouteTypes {
     | '/bulk'
     | '/followups'
     | '/login'
+    | '/reset'
     | '/settings'
     | '/templates'
     | '/upgrade'
@@ -129,6 +139,7 @@ export interface FileRouteTypes {
     | '/bulk'
     | '/followups'
     | '/login'
+    | '/reset'
     | '/settings'
     | '/templates'
     | '/upgrade'
@@ -141,6 +152,7 @@ export interface FileRouteTypes {
     | '/bulk'
     | '/followups'
     | '/login'
+    | '/reset'
     | '/settings'
     | '/templates'
     | '/upgrade'
@@ -154,6 +166,7 @@ export interface RootRouteChildren {
   BulkRoute: typeof BulkRoute
   FollowupsRoute: typeof FollowupsRoute
   LoginRoute: typeof LoginRoute
+  ResetRoute: typeof ResetRoute
   SettingsRoute: typeof SettingsRoute
   TemplatesRoute: typeof TemplatesRoute
   UpgradeRoute: typeof UpgradeRoute
@@ -181,6 +194,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset': {
+      id: '/reset'
+      path: '/reset'
+      fullPath: '/reset'
+      preLoaderRoute: typeof ResetRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -242,6 +262,7 @@ const rootRouteChildren: RootRouteChildren = {
   BulkRoute: BulkRoute,
   FollowupsRoute: FollowupsRoute,
   LoginRoute: LoginRoute,
+  ResetRoute: ResetRoute,
   SettingsRoute: SettingsRoute,
   TemplatesRoute: TemplatesRoute,
   UpgradeRoute: UpgradeRoute,

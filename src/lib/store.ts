@@ -15,8 +15,19 @@ const DEFAULT_TEMPLATES: Template[] = [
 export interface AuthState {
   userId: string;     // chosen ID
   password: string;   // local-only (demo)
+  email?: string;     // recovery email
+  securityQuestion?: string;
+  securityAnswer?: string; // stored lowercased+trimmed
   loggedIn: boolean;
 }
+
+export const SECURITY_QUESTIONS = [
+  "Aapki pehli school ka naam?",
+  "Aapki maa ka pehla naam?",
+  "Aapke pehle pet ka naam?",
+  "Aapka favourite shehar?",
+  "Aapki birth city?",
+];
 
 export interface SubscriptionState {
   pro: boolean;
@@ -44,9 +55,11 @@ interface State {
   upsertTemplate: (t: Template) => void;
   resetTemplates: () => void;
 
-  registerOrLogin: (userId: string, password: string) => { ok: boolean; error?: string };
+  registerOrLogin: (userId: string, password: string, recovery?: { email: string; securityQuestion: string; securityAnswer: string }) => { ok: boolean; error?: string };
   logout: () => void;
   activatePro: (txnRef: string) => void;
+  getRecoveryQuestion: (email: string) => { ok: boolean; question?: string; userId?: string; error?: string };
+  resetCredentials: (email: string, answer: string, newUserId: string, newPassword: string) => { ok: boolean; error?: string };
 }
 
 export const useStore = create<State>()(
@@ -101,7 +114,7 @@ export const useStore = create<State>()(
 
       resetTemplates: () => set({ templates: DEFAULT_TEMPLATES }),
 
-      registerOrLogin: (userId, password) => {
+      registerOrLogin: (userId, password, recovery) => {
         const id = userId.trim();
         if (id.length < 3) return { ok: false, error: "ID kam se kam 3 letters ka ho" };
         if (password.length < 4) return { ok: false, error: "Password kam se kam 4 letters ka ho" };
@@ -114,7 +127,13 @@ export const useStore = create<State>()(
           set({ auth: { ...existing, loggedIn: true } });
           return { ok: true };
         }
-        set({ auth: { userId: id, password, loggedIn: true } });
+        if (!recovery) return { ok: false, error: "Recovery details zaruri hain" };
+        const email = recovery.email.trim().toLowerCase();
+        const ans = recovery.securityAnswer.trim().toLowerCase();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { ok: false, error: "Sahi email daalein" };
+        if (!recovery.securityQuestion) return { ok: false, error: "Security question chunein" };
+        if (ans.length < 2) return { ok: false, error: "Security answer kam se kam 2 letters ka ho" };
+        set({ auth: { userId: id, password, email, securityQuestion: recovery.securityQuestion, securityAnswer: ans, loggedIn: true } });
         return { ok: true };
       },
 
@@ -122,6 +141,25 @@ export const useStore = create<State>()(
 
       activatePro: (txnRef) =>
         set({ subscription: { pro: true, since: Date.now(), upiTxnRef: txnRef.trim() } }),
+
+      getRecoveryQuestion: (email) => {
+        const a = get().auth;
+        if (!a.userId || !a.email) return { ok: false, error: "Koi account nahi mila" };
+        if (a.email.toLowerCase() !== email.trim().toLowerCase()) return { ok: false, error: "Email match nahi hua" };
+        return { ok: true, question: a.securityQuestion, userId: a.userId };
+      },
+
+      resetCredentials: (email, answer, newUserId, newPassword) => {
+        const a = get().auth;
+        if (!a.userId || !a.email) return { ok: false, error: "Koi account nahi mila" };
+        if (a.email.toLowerCase() !== email.trim().toLowerCase()) return { ok: false, error: "Email match nahi hua" };
+        if ((a.securityAnswer || "") !== answer.trim().toLowerCase()) return { ok: false, error: "Security answer galat hai" };
+        const id = newUserId.trim();
+        if (id.length < 3) return { ok: false, error: "ID kam se kam 3 letters ka ho" };
+        if (newPassword.length < 4) return { ok: false, error: "Password kam se kam 4 letters ka ho" };
+        set({ auth: { ...a, userId: id, password: newPassword, loggedIn: false } });
+        return { ok: true };
+      },
     }),
     { name: "repairflow-v1" }
   )
