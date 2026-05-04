@@ -82,12 +82,12 @@ function AuthGate({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const navigate = useNavigate();
   const loggedIn = useStore((s) => s.auth.loggedIn);
-  const onLogin = location.pathname === "/login";
+  const publicPath = location.pathname === "/login" || location.pathname === "/reset";
 
   useEffect(() => {
-    if (!loggedIn && !onLogin) navigate({ to: "/login" });
-  }, [loggedIn, onLogin, navigate]);
+    if (!loggedIn && !publicPath) navigate({ to: "/login" });
+  }, [loggedIn, publicPath, navigate]);
 
-  if (!loggedIn && !onLogin) return null;
+  if (!loggedIn && !publicPath) return null;
   return <>{children}</>;
 }
