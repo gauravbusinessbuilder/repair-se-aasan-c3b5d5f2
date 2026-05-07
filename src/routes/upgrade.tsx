@@ -54,7 +54,7 @@ function Upgrade() {
         </div>
         <div className="mt-3 flex items-baseline gap-1">
           <span className="text-5xl font-extrabold">₹{PRO_PRICE}</span>
-          <span className="opacity-80 text-sm">/ lifetime</span>
+          <span className="opacity-80 text-sm">/ month</span>
         </div>
         <p className="text-sm opacity-90 mt-1">
           Aap ne {jobs.length} / {FREE_LIMIT} free customers use kiye hain
