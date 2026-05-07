@@ -14,7 +14,8 @@ function Upgrade() {
   const [txn, setTxn] = useState("");
   const [showPay, setShowPay] = useState(false);
 
-  if (subscription.pro) {
+  if (isProActive(subscription)) {
+    const expires = subscription.expiresAt ? new Date(subscription.expiresAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : null;
     return (
       <AppShell title="Pro Active" back="/">
         <div className="text-center py-12">
@@ -23,9 +24,18 @@ function Upgrade() {
           </div>
           <h2 className="text-2xl font-extrabold">Aap Pro Hain 🎉</h2>
           <p className="text-muted-foreground mt-2 text-sm">Unlimited customers add karein</p>
+          {expires && (
+            <p className="mt-3 text-sm font-semibold">Valid till: <span className="text-primary">{expires}</span></p>
+          )}
           {subscription.upiTxnRef && (
             <p className="mt-4 text-xs text-muted-foreground font-mono">Ref: {subscription.upiTxnRef}</p>
           )}
+          <button
+            onClick={() => navigate({ to: "/upgrade", reloadDocument: false })}
+            className="mt-6 px-5 py-2.5 rounded-xl bg-primary/10 text-primary font-bold text-sm"
+          >
+            Renew / Extend
+          </button>
         </div>
       </AppShell>
     );
