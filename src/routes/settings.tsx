@@ -97,6 +97,44 @@ function Settings() {
         </button>
       </div>
 
+      <div className="rounded-2xl p-4 mb-4 bg-card border border-border">
+        <div className="flex items-center gap-2 mb-1">
+          <Mail className="h-4 w-4 text-primary" />
+          <div className="font-bold">Email Backup</div>
+        </div>
+        <div className="text-xs text-muted-foreground mb-3">
+          Saare {jobs.length} customers ka CSV download karke email me bhejein
+        </div>
+        <input
+          type="email"
+          value={backupEmail}
+          onChange={(e) => setBackupEmail(e.target.value)}
+          placeholder="aapka@email.com"
+          className="w-full px-4 py-3 rounded-xl border-2 border-input focus:border-primary bg-background outline-none text-base mb-2"
+        />
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={downloadCsv}
+            disabled={jobs.length === 0}
+            className="h-11 rounded-xl bg-secondary text-secondary-foreground font-bold text-sm flex items-center justify-center gap-1.5 disabled:opacity-50"
+          >
+            <Download className="h-4 w-4" /> CSV
+          </button>
+          <button
+            type="button"
+            onClick={emailBackup}
+            disabled={jobs.length === 0}
+            className="h-11 rounded-xl bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center gap-1.5 disabled:opacity-50"
+          >
+            <Mail className="h-4 w-4" /> Email Bhejein
+          </button>
+        </div>
+        <div className="text-[11px] text-muted-foreground mt-2 leading-relaxed">
+          Tip: CSV file download hogi + email app khulega. File ko email me manually attach karke bhej dijiye.
+        </div>
+      </div>
+
       <form onSubmit={save} className="space-y-4 mt-2">
         <Field label="Shop Name *" value={form.shopName} onChange={(v) => setForm({ ...form, shopName: v })} placeholder="Sharma Mobile Repair" />
         <Field label="Owner Name" value={form.ownerName} onChange={(v) => setForm({ ...form, ownerName: v })} placeholder="Aapka naam" />
