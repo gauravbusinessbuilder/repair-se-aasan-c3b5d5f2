@@ -14,6 +14,47 @@ function Settings() {
   const { shop, setShop, subscription, jobs, auth, logout } = useStore();
   const [form, setForm] = useState(shop);
   const [saved, setSaved] = useState(false);
+  const [backupEmail, setBackupEmail] = useState(auth.email || "");
+
+  const buildCsv = () => {
+    const headers = ["Job ID","Customer","Phone","Device","Problem","Cost","Status","Paid","Created","Updated","Delivered","Notes"];
+    const esc = (v: string | number | undefined) => {
+      const s = String(v ?? "");
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const fmt = (t?: number) => t ? new Date(t).toLocaleString("en-IN") : "";
+    const rows = jobs.map(j => [
+      j.id, j.customerName, j.phone, j.device, j.problem, j.cost,
+      STATUS_META[j.status].label, j.paid ? "Yes" : "No",
+      fmt(j.createdAt), fmt(j.updatedAt), fmt(j.deliveredAt), j.notes || ""
+    ].map(esc).join(","));
+    return [headers.join(","), ...rows].join("\n");
+  };
+
+  const downloadCsv = () => {
+    const csv = buildCsv();
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const date = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = `repairflow-backup-${date}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const emailBackup = () => {
+    const email = backupEmail.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      alert("Sahi email daalein");
+      return;
+    }
+    downloadCsv();
+    const subject = `RepairFlow Backup - ${shop.shopName} - ${new Date().toLocaleDateString("en-IN")}`;
+    const body = `Namaste,\n\n${shop.shopName} ka customer data backup attached hai.\n\nTotal customers: ${jobs.length}\nDate: ${new Date().toLocaleString("en-IN")}\n\nCSV file abhi download ho gayi hai - is email me attach kar dijiye.\n\n- RepairFlow`;
+    window.location.href = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
 
   const save = (e: React.FormEvent) => {
     e.preventDefault();
