@@ -30,12 +30,6 @@ function Upgrade() {
           {subscription.upiTxnRef && (
             <p className="mt-4 text-xs text-muted-foreground font-mono">Ref: {subscription.upiTxnRef}</p>
           )}
-          <button
-            onClick={() => navigate({ to: "/upgrade", reloadDocument: false })}
-            className="mt-6 px-5 py-2.5 rounded-xl bg-primary/10 text-primary font-bold text-sm"
-          >
-            Renew / Extend
-          </button>
         </div>
       </AppShell>
     );
