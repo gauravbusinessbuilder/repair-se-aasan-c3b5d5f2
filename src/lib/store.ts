@@ -32,12 +32,14 @@ export const SECURITY_QUESTIONS = [
 export interface SubscriptionState {
   pro: boolean;
   since?: number;
+  expiresAt?: number;
   upiTxnRef?: string;
 }
 
 export const FREE_LIMIT = 20;
 export const PRO_PRICE = 149;
-export const UPI_ID = "Repair@UPI"; // payment receiver UPI ID
+export const PRO_DURATION_MS = 30 * 24 * 60 * 60 * 1000; // 1 month
+export const UPI_ID = "9929299165@kotakbank"; // payment receiver UPI ID
 
 interface State {
   shop: ShopInfo;
