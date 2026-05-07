@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
-import { useStore, FREE_LIMIT, PRO_PRICE, UPI_ID } from "@/lib/store";
+import { useStore, FREE_LIMIT, PRO_PRICE, UPI_ID, isProActive } from "@/lib/store";
 import { useState } from "react";
 import { Check, Crown, Infinity, MessageSquare, Sparkles } from "lucide-react";
 
