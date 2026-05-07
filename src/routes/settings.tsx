@@ -2,7 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useStore, FREE_LIMIT, PRO_PRICE } from "@/lib/store";
 import { useState } from "react";
-import { Check, Crown, LogOut } from "lucide-react";
+import { Check, Crown, LogOut, Mail, Download } from "lucide-react";
+import { STATUS_META } from "@/lib/types";
 
 export const Route = createFileRoute("/settings")({
   component: Settings,
