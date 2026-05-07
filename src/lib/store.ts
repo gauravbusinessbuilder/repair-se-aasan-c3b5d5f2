@@ -142,7 +142,13 @@ export const useStore = create<State>()(
       logout: () => set((st) => ({ auth: { ...st.auth, loggedIn: false } })),
 
       activatePro: (txnRef) =>
-        set({ subscription: { pro: true, since: Date.now(), upiTxnRef: txnRef.trim() } }),
+        set((st) => {
+          const now = Date.now();
+          const base = st.subscription.pro && st.subscription.expiresAt && st.subscription.expiresAt > now
+            ? st.subscription.expiresAt
+            : now;
+          return { subscription: { pro: true, since: now, expiresAt: base + PRO_DURATION_MS, upiTxnRef: txnRef.trim() } };
+        }),
 
       getRecoveryQuestion: (email) => {
         const a = get().auth;
