@@ -177,6 +177,12 @@ export function fillTemplate(body: string, vars: Record<string, string | number>
   return body.replace(/\{\{(\w+)\}\}/g, (_, k) => String(vars[k] ?? ""));
 }
 
+export function isProActive(sub: SubscriptionState): boolean {
+  if (!sub.pro) return false;
+  if (!sub.expiresAt) return true; // legacy lifetime
+  return sub.expiresAt > Date.now();
+}
+
 export function waLink(phone: string, message: string) {
   // Clean, ensure 91 prefix for Indian 10-digit
   const digits = phone.replace(/\D/g, "");
