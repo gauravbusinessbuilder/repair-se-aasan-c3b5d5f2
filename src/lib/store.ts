@@ -32,12 +32,14 @@ export const SECURITY_QUESTIONS = [
 export interface SubscriptionState {
   pro: boolean;
   since?: number;
+  expiresAt?: number;
   upiTxnRef?: string;
 }
 
 export const FREE_LIMIT = 20;
 export const PRO_PRICE = 149;
-export const UPI_ID = "Repair@UPI"; // payment receiver UPI ID
+export const PRO_DURATION_MS = 30 * 24 * 60 * 60 * 1000; // 1 month
+export const UPI_ID = "9929299165@kotakbank"; // payment receiver UPI ID
 
 interface State {
   shop: ShopInfo;
@@ -140,7 +142,13 @@ export const useStore = create<State>()(
       logout: () => set((st) => ({ auth: { ...st.auth, loggedIn: false } })),
 
       activatePro: (txnRef) =>
-        set({ subscription: { pro: true, since: Date.now(), upiTxnRef: txnRef.trim() } }),
+        set((st) => {
+          const now = Date.now();
+          const base = st.subscription.pro && st.subscription.expiresAt && st.subscription.expiresAt > now
+            ? st.subscription.expiresAt
+            : now;
+          return { subscription: { pro: true, since: now, expiresAt: base + PRO_DURATION_MS, upiTxnRef: txnRef.trim() } };
+        }),
 
       getRecoveryQuestion: (email) => {
         const a = get().auth;
@@ -167,6 +175,12 @@ export const useStore = create<State>()(
 
 export function fillTemplate(body: string, vars: Record<string, string | number>) {
   return body.replace(/\{\{(\w+)\}\}/g, (_, k) => String(vars[k] ?? ""));
+}
+
+export function isProActive(sub: SubscriptionState): boolean {
+  if (!sub.pro) return false;
+  if (!sub.expiresAt) return true; // legacy lifetime
+  return sub.expiresAt > Date.now();
 }
 
 export function waLink(phone: string, message: string) {

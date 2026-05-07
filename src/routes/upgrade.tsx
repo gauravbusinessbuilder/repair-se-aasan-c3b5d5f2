@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
-import { useStore, FREE_LIMIT, PRO_PRICE, UPI_ID } from "@/lib/store";
+import { useStore, FREE_LIMIT, PRO_PRICE, UPI_ID, isProActive } from "@/lib/store";
 import { useState } from "react";
 import { Check, Crown, Infinity, MessageSquare, Sparkles } from "lucide-react";
 
@@ -14,7 +14,8 @@ function Upgrade() {
   const [txn, setTxn] = useState("");
   const [showPay, setShowPay] = useState(false);
 
-  if (subscription.pro) {
+  if (isProActive(subscription)) {
+    const expires = subscription.expiresAt ? new Date(subscription.expiresAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : null;
     return (
       <AppShell title="Pro Active" back="/">
         <div className="text-center py-12">
@@ -23,6 +24,9 @@ function Upgrade() {
           </div>
           <h2 className="text-2xl font-extrabold">Aap Pro Hain 🎉</h2>
           <p className="text-muted-foreground mt-2 text-sm">Unlimited customers add karein</p>
+          {expires && (
+            <p className="mt-3 text-sm font-semibold">Valid till: <span className="text-primary">{expires}</span></p>
+          )}
           {subscription.upiTxnRef && (
             <p className="mt-4 text-xs text-muted-foreground font-mono">Ref: {subscription.upiTxnRef}</p>
           )}
@@ -50,7 +54,7 @@ function Upgrade() {
         </div>
         <div className="mt-3 flex items-baseline gap-1">
           <span className="text-5xl font-extrabold">₹{PRO_PRICE}</span>
-          <span className="opacity-80 text-sm">/ lifetime</span>
+          <span className="opacity-80 text-sm">/ month</span>
         </div>
         <p className="text-sm opacity-90 mt-1">
           Aap ne {jobs.length} / {FREE_LIMIT} free customers use kiye hain
