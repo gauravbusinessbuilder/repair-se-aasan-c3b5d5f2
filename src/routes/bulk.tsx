@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useStore, fillTemplate, waLink } from "@/lib/store";
 import { useMemo, useState } from "react";
-import { Check, Copy, MessageSquare, Send, Users } from "lucide-react";
+import { Check, Copy, MessageSquare, Send, Users, ChevronLeft, ChevronRight, X } from "lucide-react";
 
 export const Route = createFileRoute("/bulk")({
   component: BulkSend,
@@ -14,6 +14,9 @@ function BulkSend() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [copied, setCopied] = useState(false);
+  const [queueOpen, setQueueOpen] = useState(false);
+  const [queueIdx, setQueueIdx] = useState(0);
+  const [sentIds, setSentIds] = useState<Set<string>>(new Set());
 
   const filtered = useMemo(
     () => (statusFilter === "all" ? jobs : jobs.filter((j) => j.status === statusFilter)),
@@ -171,16 +174,74 @@ function BulkSend() {
           {copied ? (<><Check className="h-5 w-5" /> Copy Ho Gaya — {selected.size} messages</>) : (<><Copy className="h-5 w-5" /> Copy {selected.size > 0 ? selected.size : ""} Messages</>)}
         </button>
         {items.length > 0 && (
-          <a
-            href={items[0].link}
-            target="_blank"
-            rel="noreferrer"
+          <button
+            onClick={() => { setQueueIdx(0); setSentIds(new Set()); setQueueOpen(true); }}
             className="w-full h-12 rounded-2xl bg-whatsapp text-white font-semibold text-sm flex items-center justify-center gap-2"
           >
-            <Send className="h-4 w-4" /> Pehla WhatsApp Open Karein
-          </a>
+            <Send className="h-4 w-4" /> Ek-Ek Karke Bhejein ({items.length})
+          </button>
         )}
       </div>
+
+      {queueOpen && items.length > 0 && (() => {
+        const cur = items[Math.min(queueIdx, items.length - 1)];
+        const isSent = sentIds.has(cur.job.id);
+        return (
+          <div className="fixed inset-0 z-50 bg-black/60 flex items-end sm:items-center justify-center p-0 sm:p-4">
+            <div className="bg-card w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl border border-border shadow-2xl max-h-[92vh] flex flex-col">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+                <div className="text-sm font-bold">
+                  {queueIdx + 1} / {items.length}
+                  <span className="ml-2 text-xs font-medium text-muted-foreground">{sentIds.size} sent</span>
+                </div>
+                <button onClick={() => setQueueOpen(false)} className="p-2 -mr-2 rounded-lg active:bg-muted">
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              <div className="p-4 overflow-y-auto flex-1">
+                <div className="bg-muted/40 rounded-2xl p-3 mb-3">
+                  <div className="font-bold">{cur.job.customerName}</div>
+                  <div className="text-xs text-muted-foreground">+91 {cur.job.phone} · {cur.job.device} · #{cur.job.id}</div>
+                </div>
+                <div className="text-[11px] uppercase font-bold text-muted-foreground mb-1">Message</div>
+                <p className="text-sm whitespace-pre-wrap leading-relaxed bg-accent/40 border border-border rounded-2xl p-3">{cur.msg}</p>
+
+                <a
+                  href={cur.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => setSentIds((s) => new Set(s).add(cur.job.id))}
+                  className={`mt-4 w-full h-14 rounded-2xl font-bold text-base flex items-center justify-center gap-2 ${
+                    isSent ? "bg-status-ready text-status-ready-foreground" : "bg-whatsapp text-white"
+                  }`}
+                >
+                  {isSent ? (<><Check className="h-5 w-5" /> Sent — Phir Bhejein</>) : (<><Send className="h-5 w-5" /> WhatsApp Open Karein</>)}
+                </a>
+              </div>
+
+              <div className="flex items-center gap-2 p-3 border-t border-border">
+                <button
+                  onClick={() => setQueueIdx((i) => Math.max(0, i - 1))}
+                  disabled={queueIdx === 0}
+                  className="flex-1 h-12 rounded-2xl bg-secondary font-bold text-sm flex items-center justify-center gap-1 disabled:opacity-40"
+                >
+                  <ChevronLeft className="h-4 w-4" /> Pichla
+                </button>
+                <button
+                  onClick={() => {
+                    if (queueIdx >= items.length - 1) setQueueOpen(false);
+                    else setQueueIdx((i) => i + 1);
+                  }}
+                  className="flex-1 h-12 rounded-2xl bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center gap-1"
+                >
+                  {queueIdx >= items.length - 1 ? "Done" : "Agla"} <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </AppShell>
   );
 }
