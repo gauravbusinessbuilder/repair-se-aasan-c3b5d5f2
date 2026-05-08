@@ -35,8 +35,9 @@ function Upgrade() {
     );
   }
 
-  const upiUrl = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent("RepairFlow Pro")}&am=${PRO_PRICE}&cu=INR&tn=${encodeURIComponent("RepairFlow Pro Subscription")}`;
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(upiUrl)}`;
+  const hasUpi = UPI_ID.trim().length > 0;
+  const upiUrl = hasUpi ? `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent("RepairFlow Pro")}&am=${PRO_PRICE}&cu=INR&tn=${encodeURIComponent("RepairFlow Pro Subscription")}` : "";
+  const qrUrl = hasUpi ? `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(upiUrl)}` : "";
 
   const submitPaid = (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,21 +77,25 @@ function Upgrade() {
         </button>
       ) : (
         <div className="mt-6 bg-card border border-border rounded-3xl p-5">
-          <h3 className="font-bold text-base mb-3">UPI se pay karein</h3>
-          <div className="flex flex-col items-center bg-background rounded-2xl p-4 border border-border">
-            <img src={qrUrl} alt="UPI QR" width={220} height={220} className="rounded-xl" />
-            <div className="mt-3 text-center">
-              <div className="text-xs text-muted-foreground">UPI ID</div>
-              <div className="font-mono font-bold text-sm">{UPI_ID}</div>
-              <div className="mt-1 text-xs text-muted-foreground">Amount: <span className="font-bold text-foreground">₹{PRO_PRICE}</span></div>
+          <h3 className="font-bold text-base mb-3">Payment</h3>
+          {hasUpi ? (
+            <div className="flex flex-col items-center bg-background rounded-2xl p-4 border border-border">
+              <img src={qrUrl} alt="UPI QR" width={220} height={220} className="rounded-xl" />
+              <div className="mt-3 text-center">
+                <div className="text-xs text-muted-foreground">Amount: <span className="font-bold text-foreground">₹{PRO_PRICE}</span></div>
+              </div>
+              <a
+                href={upiUrl}
+                className="mt-3 w-full text-center py-2.5 rounded-xl bg-whatsapp text-white font-semibold text-sm"
+              >
+                UPI App Kholo
+              </a>
             </div>
-            <a
-              href={upiUrl}
-              className="mt-3 w-full text-center py-2.5 rounded-xl bg-whatsapp text-white font-semibold text-sm"
-            >
-              UPI App Kholo
-            </a>
-          </div>
+          ) : (
+            <div className="bg-background rounded-2xl p-4 border border-border text-center text-sm text-muted-foreground">
+              Payment ke liye owner se sampark karein. Amount: <span className="font-bold text-foreground">₹{PRO_PRICE}</span>
+            </div>
+          )}
 
           <form onSubmit={submitPaid} className="mt-4 space-y-3">
             <label className="block">
