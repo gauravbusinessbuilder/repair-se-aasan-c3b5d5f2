@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { STATUS_META, type Job } from "@/lib/types";
-import { Phone, Smartphone } from "lucide-react";
+import { Smartphone } from "lucide-react";
 
 export function JobCard({ job }: { job: Job }) {
   const meta = STATUS_META[job.status];
@@ -22,10 +22,6 @@ export function JobCard({ job }: { job: Job }) {
           <div className="flex items-center gap-1 text-sm text-muted-foreground mt-0.5">
             <Smartphone className="h-3.5 w-3.5" />
             <span className="truncate">{job.device}</span>
-          </div>
-          <div className="flex items-center gap-1 text-sm text-muted-foreground mt-0.5">
-            <Phone className="h-3.5 w-3.5" />
-            <span>+91 {job.phone}</span>
           </div>
         </div>
         <div className="text-right">
