@@ -11,7 +11,17 @@ export const Route = createFileRoute("/customers")({
 });
 
 function CustomersPage() {
-  const { customers, customersPassword, setCustomersPassword, deleteCustomer } = useStore();
+  const { customers, customersPassword, setCustomersPassword, deleteCustomer, jobs } = useStore();
+  const jobsByPhone = useMemo(() => {
+    const m = new Map<string, typeof jobs>();
+    for (const j of jobs) {
+      const arr = m.get(j.phone) || [];
+      arr.push(j);
+      m.set(j.phone, arr);
+    }
+    for (const arr of m.values()) arr.sort((a, b) => b.updatedAt - a.updatedAt);
+    return m;
+  }, [jobs]);
   const [unlocked, setUnlocked] = useState(false);
   const [pw, setPw] = useState("");
   const [pw2, setPw2] = useState("");
