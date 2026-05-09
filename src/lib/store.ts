@@ -41,6 +41,15 @@ export const PRO_PRICE = 149;
 export const PRO_DURATION_MS = 30 * 24 * 60 * 60 * 1000; // 1 month
 export const UPI_ID = ""; // payment receiver UPI ID (removed)
 
+export interface CustomerRecord {
+  phone: string;       // unique key
+  name: string;
+  device?: string;
+  firstAt: number;
+  lastAt: number;
+  visits: number;
+}
+
 interface State {
   shop: ShopInfo;
   jobs: Job[];
@@ -48,8 +57,12 @@ interface State {
   counter: number;
   auth: AuthState;
   subscription: SubscriptionState;
+  customers: CustomerRecord[];
+  customersPassword: string; // empty = not set yet
 
   setShop: (s: Partial<ShopInfo>) => void;
+  setCustomersPassword: (pw: string) => void;
+  deleteCustomer: (phone: string) => void;
   addJob: (j: Omit<Job, "id" | "status" | "createdAt" | "updatedAt" | "paid">) => Job;
   updateJob: (id: string, patch: Partial<Job>) => void;
   setStatus: (id: string, status: JobStatus) => void;
@@ -73,8 +86,12 @@ export const useStore = create<State>()(
       counter: 1,
       auth: { userId: "", password: "", loggedIn: false },
       subscription: { pro: false },
+      customers: [],
+      customersPassword: "",
 
       setShop: (s) => set((st) => ({ shop: { ...st.shop, ...s } })),
+      setCustomersPassword: (pw) => set({ customersPassword: pw }),
+      deleteCustomer: (phone) => set((st) => ({ customers: st.customers.filter((c) => c.phone !== phone) })),
 
       addJob: (j) => {
         const num = get().counter;
@@ -88,7 +105,15 @@ export const useStore = create<State>()(
           updatedAt: now,
           paid: false,
         };
-        set((st) => ({ jobs: [job, ...st.jobs], counter: st.counter + 1 }));
+        set((st) => {
+          const existing = st.customers.find((c) => c.phone === j.phone);
+          const customers = existing
+            ? st.customers.map((c) => c.phone === j.phone
+                ? { ...c, name: j.customerName, device: j.device, lastAt: now, visits: c.visits + 1 }
+                : c)
+            : [{ phone: j.phone, name: j.customerName, device: j.device, firstAt: now, lastAt: now, visits: 1 }, ...st.customers];
+          return { jobs: [job, ...st.jobs], counter: st.counter + 1, customers };
+        });
         return job;
       },
 

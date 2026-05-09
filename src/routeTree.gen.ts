@@ -15,6 +15,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ResetRouteImport } from './routes/reset'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FollowupsRouteImport } from './routes/followups'
+import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as BulkRouteImport } from './routes/bulk'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AddRouteImport } from './routes/add'
@@ -51,6 +52,11 @@ const FollowupsRoute = FollowupsRouteImport.update({
   path: '/followups',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CustomersRoute = CustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BulkRoute = BulkRouteImport.update({
   id: '/bulk',
   path: '/bulk',
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/add': typeof AddRoute
   '/analytics': typeof AnalyticsRoute
   '/bulk': typeof BulkRoute
+  '/customers': typeof CustomersRoute
   '/followups': typeof FollowupsRoute
   '/login': typeof LoginRoute
   '/reset': typeof ResetRoute
@@ -95,6 +102,7 @@ export interface FileRoutesByTo {
   '/add': typeof AddRoute
   '/analytics': typeof AnalyticsRoute
   '/bulk': typeof BulkRoute
+  '/customers': typeof CustomersRoute
   '/followups': typeof FollowupsRoute
   '/login': typeof LoginRoute
   '/reset': typeof ResetRoute
@@ -109,6 +117,7 @@ export interface FileRoutesById {
   '/add': typeof AddRoute
   '/analytics': typeof AnalyticsRoute
   '/bulk': typeof BulkRoute
+  '/customers': typeof CustomersRoute
   '/followups': typeof FollowupsRoute
   '/login': typeof LoginRoute
   '/reset': typeof ResetRoute
@@ -124,6 +133,7 @@ export interface FileRouteTypes {
     | '/add'
     | '/analytics'
     | '/bulk'
+    | '/customers'
     | '/followups'
     | '/login'
     | '/reset'
@@ -137,6 +147,7 @@ export interface FileRouteTypes {
     | '/add'
     | '/analytics'
     | '/bulk'
+    | '/customers'
     | '/followups'
     | '/login'
     | '/reset'
@@ -150,6 +161,7 @@ export interface FileRouteTypes {
     | '/add'
     | '/analytics'
     | '/bulk'
+    | '/customers'
     | '/followups'
     | '/login'
     | '/reset'
@@ -164,6 +176,7 @@ export interface RootRouteChildren {
   AddRoute: typeof AddRoute
   AnalyticsRoute: typeof AnalyticsRoute
   BulkRoute: typeof BulkRoute
+  CustomersRoute: typeof CustomersRoute
   FollowupsRoute: typeof FollowupsRoute
   LoginRoute: typeof LoginRoute
   ResetRoute: typeof ResetRoute
@@ -217,6 +230,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FollowupsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/customers': {
+      id: '/customers'
+      path: '/customers'
+      fullPath: '/customers'
+      preLoaderRoute: typeof CustomersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/bulk': {
       id: '/bulk'
       path: '/bulk'
@@ -260,6 +280,7 @@ const rootRouteChildren: RootRouteChildren = {
   AddRoute: AddRoute,
   AnalyticsRoute: AnalyticsRoute,
   BulkRoute: BulkRoute,
+  CustomersRoute: CustomersRoute,
   FollowupsRoute: FollowupsRoute,
   LoginRoute: LoginRoute,
   ResetRoute: ResetRoute,
