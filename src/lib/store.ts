@@ -41,6 +41,15 @@ export const PRO_PRICE = 149;
 export const PRO_DURATION_MS = 30 * 24 * 60 * 60 * 1000; // 1 month
 export const UPI_ID = ""; // payment receiver UPI ID (removed)
 
+export interface CustomerRecord {
+  phone: string;       // unique key
+  name: string;
+  device?: string;
+  firstAt: number;
+  lastAt: number;
+  visits: number;
+}
+
 interface State {
   shop: ShopInfo;
   jobs: Job[];
@@ -48,8 +57,12 @@ interface State {
   counter: number;
   auth: AuthState;
   subscription: SubscriptionState;
+  customers: CustomerRecord[];
+  customersPassword: string; // empty = not set yet
 
   setShop: (s: Partial<ShopInfo>) => void;
+  setCustomersPassword: (pw: string) => void;
+  deleteCustomer: (phone: string) => void;
   addJob: (j: Omit<Job, "id" | "status" | "createdAt" | "updatedAt" | "paid">) => Job;
   updateJob: (id: string, patch: Partial<Job>) => void;
   setStatus: (id: string, status: JobStatus) => void;
