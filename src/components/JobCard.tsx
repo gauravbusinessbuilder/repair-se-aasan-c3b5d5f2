@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { STATUS_META, type Job } from "@/lib/types";
-import { Phone, Smartphone } from "lucide-react";
+import { Smartphone } from "lucide-react";
 
 export function JobCard({ job }: { job: Job }) {
   const meta = STATUS_META[job.status];
