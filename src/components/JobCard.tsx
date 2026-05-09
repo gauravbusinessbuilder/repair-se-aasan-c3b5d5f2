@@ -23,10 +23,6 @@ export function JobCard({ job }: { job: Job }) {
             <Smartphone className="h-3.5 w-3.5" />
             <span className="truncate">{job.device}</span>
           </div>
-          <div className="flex items-center gap-1 text-sm text-muted-foreground mt-0.5">
-            <Phone className="h-3.5 w-3.5" />
-            <span>+91 {job.phone}</span>
-          </div>
         </div>
         <div className="text-right">
           <div className="text-lg font-bold">₹{job.cost}</div>
