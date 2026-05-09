@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useStore, waLink } from "@/lib/store";
-import { useState } from "react";
-import { Lock, Search, Phone, MessageCircle, Trash2, Eye, EyeOff, ShieldCheck, Users } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Lock, Search, Phone, MessageCircle, Trash2, Eye, EyeOff, ShieldCheck, Users, Wrench } from "lucide-react";
+import { STATUS_META } from "@/lib/types";
+import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/customers")({
   component: CustomersPage,
