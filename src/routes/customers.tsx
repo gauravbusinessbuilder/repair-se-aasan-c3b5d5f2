@@ -141,7 +141,13 @@ function CustomersPage() {
             {customers.length === 0 ? "Abhi koi customer nahi" : "Kuch nahi mila"}
           </div>
         )}
-        {filtered.map((c) => (
+        {filtered.map((c) => {
+          const cJobs = jobsByPhone.get(c.phone) || [];
+          const active = cJobs.filter((j) => j.status !== "delivered");
+          const pending = cJobs.filter((j) => j.status === "delivered" && !j.paid);
+          const latest = cJobs[0];
+          const latestMeta = latest ? STATUS_META[latest.status] : null;
+          return (
           <div key={c.phone} className="bg-card rounded-2xl p-4 border border-border">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
@@ -155,6 +161,28 @@ function CustomersPage() {
                 <div className="text-[11px] text-muted-foreground mt-1">
                   {c.visits} visit{c.visits > 1 ? "s" : ""} · last {new Date(c.lastAt).toLocaleDateString("en-IN")}
                 </div>
+                {latest && latestMeta && (
+                  <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                    <Link
+                      to="/job/$id"
+                      params={{ id: latest.id }}
+                      className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${latestMeta.bg} ${latestMeta.text} flex items-center gap-1`}
+                    >
+                      <Wrench className="h-3 w-3" />
+                      #{latest.id} · {latestMeta.hinglish}
+                    </Link>
+                    {active.length > 1 && (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-status-progress/15 text-status-progress">
+                        +{active.length - 1} active
+                      </span>
+                    )}
+                    {pending.length > 0 && (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-destructive/15 text-destructive">
+                        ₹{pending.reduce((s, j) => s + (j.cost || 0), 0)} pending
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="flex flex-col gap-1.5">
                 <a
