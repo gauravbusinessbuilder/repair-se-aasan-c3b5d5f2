@@ -146,6 +146,24 @@ function Settings() {
         </div>
       </div>
 
+      <Link
+        to="/customers"
+        className="rounded-2xl p-4 mb-4 bg-card border border-border flex items-center justify-between active:scale-[0.99] transition"
+      >
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+            <Users className="h-5 w-5" />
+          </div>
+          <div className="min-w-0">
+            <div className="font-bold flex items-center gap-1.5">
+              Customer List <Lock className="h-3.5 w-3.5 text-muted-foreground" />
+            </div>
+            <div className="text-xs text-muted-foreground">Password protected record</div>
+          </div>
+        </div>
+        <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0" />
+      </Link>
+
       <form onSubmit={save} className="space-y-4 mt-2">
         <Field label="Shop Name *" value={form.shopName} onChange={(v) => setForm({ ...form, shopName: v })} placeholder="Sharma Mobile Repair" />
         <Field label="Owner Name" value={form.ownerName} onChange={(v) => setForm({ ...form, ownerName: v })} placeholder="Aapka naam" />
