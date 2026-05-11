@@ -166,6 +166,7 @@ function CustomersPage() {
                     <Link
                       to="/job/$id"
                       params={{ id: latest.id }}
+                      replace
                       className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${latestMeta.bg} ${latestMeta.text} flex items-center gap-1`}
                     >
                       <Wrench className="h-3 w-3" />

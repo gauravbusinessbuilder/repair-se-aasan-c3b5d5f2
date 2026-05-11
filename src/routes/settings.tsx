@@ -81,12 +81,12 @@ function Settings() {
             </div>
           </div>
           {!pro && (
-            <Link to="/upgrade" className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-bold whitespace-nowrap">
+            <Link to="/upgrade" replace className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-bold whitespace-nowrap">
               Get Pro · ₹{PRO_PRICE}
             </Link>
           )}
           {pro && (
-            <Link to="/upgrade" className="px-4 py-2 rounded-xl bg-primary/10 text-primary text-sm font-bold whitespace-nowrap">
+            <Link to="/upgrade" replace className="px-4 py-2 rounded-xl bg-primary/10 text-primary text-sm font-bold whitespace-nowrap">
               Renew
             </Link>
           )}
@@ -101,7 +101,7 @@ function Settings() {
           <div className="font-bold">{auth.userId || "—"}</div>
         </div>
         <button
-          onClick={() => { logout(); navigate({ to: "/login" }); }}
+          onClick={() => { logout(); navigate({ to: "/login", replace: true }); }}
           className="px-3 py-2 rounded-xl bg-destructive/10 text-destructive font-bold text-sm flex items-center gap-1.5"
         >
           <LogOut className="h-4 w-4" /> Logout
@@ -148,6 +148,7 @@ function Settings() {
 
       <Link
         to="/customers"
+        replace
         className="rounded-2xl p-4 mb-4 bg-card border border-border flex items-center justify-between active:scale-[0.99] transition"
       >
         <div className="flex items-center gap-3 min-w-0">

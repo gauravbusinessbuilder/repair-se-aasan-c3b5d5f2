@@ -36,13 +36,13 @@ function Reset() {
     if (!r.ok) { setErr(r.error || "Error"); return; }
     setOk("Password reset ho gaya! Naye details se login karein.");
     setStep(3);
-    setTimeout(() => navigate({ to: "/login" }), 1800);
+    setTimeout(() => navigate({ to: "/login", replace: true }), 1800);
   };
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 py-10 safe-top safe-bottom">
       <div className="w-full max-w-sm">
-        <Link to="/login" className="inline-flex items-center gap-1 text-sm font-semibold text-muted-foreground mb-4">
+        <Link to="/login" replace className="inline-flex items-center gap-1 text-sm font-semibold text-muted-foreground mb-4">
           <ArrowLeft className="h-4 w-4" /> Login pe wapas
         </Link>
 

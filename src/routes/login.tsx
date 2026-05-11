@@ -37,7 +37,7 @@ function Login() {
       ? registerOrLogin(userId, password, { email, securityQuestion: secQ, securityAnswer: secA })
       : registerOrLogin(userId, password);
     if (!res.ok) { setErr(res.error || "Error"); return; }
-    navigate({ to: "/" });
+    navigate({ to: "/", replace: true });
   };
 
   return (
@@ -91,7 +91,7 @@ function Login() {
 
           {!isFirstTime && (
             <div className="text-center">
-              <Link to="/reset" className="text-sm font-semibold text-primary">
+              <Link to="/reset" replace className="text-sm font-semibold text-primary">
                 ID/Password bhul gaye?
               </Link>
             </div>
