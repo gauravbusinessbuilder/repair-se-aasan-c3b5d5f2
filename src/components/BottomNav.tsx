@@ -22,6 +22,7 @@ export function BottomNav() {
               <li key={to} className="flex items-center -mt-6">
                 <Link
                   to={to as "/"}
+                  replace
                   className="h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 flex items-center justify-center active:scale-95 transition"
                   aria-label={label}
                 >
@@ -34,6 +35,7 @@ export function BottomNav() {
             <li key={to} className="flex-1">
               <Link
                 to={to as "/"}
+                replace
                 className={`flex flex-col items-center gap-1 py-2 text-xs font-medium ${
                   active ? "text-primary" : "text-muted-foreground"
                 }`}
