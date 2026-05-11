@@ -33,7 +33,7 @@ function CustomersPage() {
 
   if (!unlocked) {
     return (
-      <AppShell title="Customers" back="/settings">
+      <AppShell title="Customers" back="/">
         <div className="mt-6 max-w-md mx-auto">
           <div className="rounded-3xl bg-gradient-to-br from-primary/15 to-primary/5 border border-primary/30 p-6 text-center">
             <div className="mx-auto h-16 w-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center mb-3">
@@ -111,7 +111,7 @@ function CustomersPage() {
   });
 
   return (
-    <AppShell title="Customers" back="/settings">
+    <AppShell title="Customers" back="/">
       <div className="flex items-center justify-between gap-2 mt-2">
         <div className="flex items-center gap-2 text-sm font-bold">
           <Users className="h-4 w-4 text-primary" />
