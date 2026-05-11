@@ -152,7 +152,7 @@ function JobDetail() {
         onClick={() => {
           if (confirm("Yeh job delete karna hai?")) {
             deleteJob(job.id);
-            navigate({ to: "/" });
+            navigate({ to: "/", replace: true });
           }
         }}
         className="mt-6 w-full h-12 rounded-xl text-destructive font-semibold text-sm flex items-center justify-center gap-2"
