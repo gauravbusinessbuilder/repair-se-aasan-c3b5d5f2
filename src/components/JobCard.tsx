@@ -8,6 +8,7 @@ export function JobCard({ job }: { job: Job }) {
     <Link
       to="/job/$id"
       params={{ id: job.id }}
+      replace
       className="block bg-card rounded-2xl p-4 border border-border active:scale-[0.99] transition shadow-sm"
     >
       <div className="flex items-start justify-between gap-3">

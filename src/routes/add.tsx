@@ -26,7 +26,7 @@ function AddJob() {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (blocked) { navigate({ to: "/upgrade" }); return; }
+    if (blocked) { navigate({ to: "/upgrade", replace: true }); return; }
     if (!form.customerName.trim() || form.phone.length < 10 || !form.device.trim()) return;
 
     const job = addJob({
@@ -50,7 +50,7 @@ function AddJob() {
       window.open(waLink(job.phone, msg), "_blank");
     }
 
-    navigate({ to: "/job/$id", params: { id: job.id } });
+    navigate({ to: "/job/$id", params: { id: job.id }, replace: true });
   };
 
   return (
@@ -66,6 +66,7 @@ function AddJob() {
           </p>
           <Link
             to="/upgrade"
+            replace
             className="mt-4 inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-primary text-primary-foreground font-bold shadow-lg shadow-primary/30"
           >
             <Crown className="h-4 w-4" /> Get Pro · ₹{PRO_PRICE}
@@ -75,7 +76,7 @@ function AddJob() {
       <form onSubmit={submit} className="space-y-4 mt-2">
         {!isPro && (
           <div className="rounded-2xl bg-accent/50 border border-border p-2.5 text-xs text-center font-medium">
-            {remaining} free customers bache hain · <Link to="/upgrade" className="text-primary font-bold underline">Upgrade</Link>
+            {remaining} free customers bache hain · <Link to="/upgrade" replace className="text-primary font-bold underline">Upgrade</Link>
           </div>
         )}
         <Field label="Customer Name *" placeholder="Ramesh Kumar" value={form.customerName} onChange={set("customerName")} />

@@ -43,7 +43,7 @@ function Upgrade() {
     e.preventDefault();
     if (txn.trim().length < 4) return;
     activatePro(txn);
-    setTimeout(() => navigate({ to: "/" }), 800);
+    setTimeout(() => navigate({ to: "/", replace: true }), 800);
   };
 
   return (

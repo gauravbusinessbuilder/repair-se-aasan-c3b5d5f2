@@ -18,7 +18,7 @@ export function AppShell({ title, back, right, children, hideNav }: Props) {
         <header className="sticky top-0 z-30 bg-background/90 backdrop-blur border-b border-border safe-top">
           <div className="max-w-lg mx-auto px-4 h-14 flex items-center gap-3">
             {back && (
-              <Link to={back as "/"} className="p-2 -ml-2 rounded-lg active:bg-muted">
+              <Link to={back as "/"} replace className="p-2 -ml-2 rounded-lg active:bg-muted">
                 <ChevronLeft className="h-6 w-6" />
               </Link>
             )}

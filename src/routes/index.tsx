@@ -49,6 +49,7 @@ function Index() {
       {isFirstRun && (
         <Link
           to="/settings"
+          replace
           className="block mt-4 rounded-2xl bg-accent border border-primary/20 p-4 text-sm"
         >
           <div className="font-bold text-accent-foreground">👋 Welcome! Pehle apni shop set karein</div>
@@ -67,6 +68,7 @@ function Index() {
       <div className="mt-5 grid grid-cols-1 gap-3">
         <Link
           to="/add"
+          replace
           className="flex items-center gap-4 bg-primary text-primary-foreground rounded-2xl p-5 active:scale-[0.99] transition shadow-lg shadow-primary/20"
         >
           <div className="h-12 w-12 rounded-xl bg-white/15 flex items-center justify-center">
@@ -79,14 +81,14 @@ function Index() {
         </Link>
 
         <div className="grid grid-cols-2 gap-3">
-          <Link to="/bulk" className="bg-card border border-border rounded-2xl p-4 active:scale-[0.99] transition">
+          <Link to="/bulk" replace className="bg-card border border-border rounded-2xl p-4 active:scale-[0.99] transition">
             <div className="h-10 w-10 rounded-xl bg-whatsapp/15 text-whatsapp flex items-center justify-center mb-2">
               <MessageSquare className="h-5 w-5" />
             </div>
             <div className="font-bold leading-tight">Bulk Send</div>
             <div className="text-xs text-muted-foreground mt-0.5">Multiple customers</div>
           </Link>
-          <Link to="/followups" className="bg-card border border-border rounded-2xl p-4 active:scale-[0.99] transition">
+          <Link to="/followups" replace className="bg-card border border-border rounded-2xl p-4 active:scale-[0.99] transition">
             <div className="h-10 w-10 rounded-xl bg-status-waiting/15 text-status-waiting flex items-center justify-center mb-2">
               <FileText className="h-5 w-5" />
             </div>
@@ -109,6 +111,7 @@ function Index() {
             <p className="text-sm text-muted-foreground">Koi active repair nahi hai</p>
             <Link
               to="/add"
+              replace
               className="inline-block mt-4 px-4 py-2 rounded-xl bg-primary text-primary-foreground font-semibold text-sm"
             >
               + Pehla Repair Add Karein
